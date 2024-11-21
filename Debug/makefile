@@ -11,6 +11,7 @@ RM := rm -rf
 -include sources.mk
 -include Startup/subdir.mk
 -include Src/subdir.mk
+-include Inc/subdir.mk
 -include objects.mk
 
 ifneq ($(MAKECMDGOALS),clean)
@@ -51,6 +52,9 @@ default.size.stdout \
 OBJDUMP_LIST += \
 FiniteStateMachine_TrafficLights.list \
 
+OBJCOPY_HEX += \
+FiniteStateMachine_TrafficLights.hex \
+
 
 # All Target
 all: main-build
@@ -74,12 +78,17 @@ FiniteStateMachine_TrafficLights.list: $(EXECUTABLES) makefile objects.list $(OP
 	@echo 'Finished building: $@'
 	@echo ' '
 
+FiniteStateMachine_TrafficLights.hex: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objcopy  -O ihex $(EXECUTABLES) "FiniteStateMachine_TrafficLights.hex"
+	@echo 'Finished building: $@'
+	@echo ' '
+
 # Other Targets
 clean:
-	-$(RM) FiniteStateMachine_TrafficLights.elf FiniteStateMachine_TrafficLights.list FiniteStateMachine_TrafficLights.map default.size.stdout
+	-$(RM) FiniteStateMachine_TrafficLights.elf FiniteStateMachine_TrafficLights.hex FiniteStateMachine_TrafficLights.list FiniteStateMachine_TrafficLights.map default.size.stdout
 	-@echo ' '
 
-secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)
+secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_HEX)
 
 fail-specified-linker-script-missing:
 	@echo 'Error: Cannot find the specified linker script. Check the linker settings in the build configuration.'
