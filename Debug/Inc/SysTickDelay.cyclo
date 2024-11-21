@@ -1,0 +1,3 @@
+../Inc/SysTickDelay.c:8:6:SysTick_Init	1
+../Inc/SysTickDelay.c:15:6:SysTick_Delay	2
+../Inc/SysTickDelay.c:23:6:SysTick_Delay10ms	2
